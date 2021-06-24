@@ -28,7 +28,7 @@ public class Mysqlconnect {
         try {
             PreparedStatement ps = conn.prepareStatement("select * from users");
             ResultSet rs = ps.executeQuery();
-
+/**/
             while (rs.next()){
                 list.add(new Columns((rs.getString("first")), (rs.getString("last")), (rs.getString("classes")), (rs.getString("grade"))));
             }
