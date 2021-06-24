@@ -22,7 +22,7 @@ public class Mysqlconnect {
             }
 
         }
-    public static ObservableList<Columns> getDatausers(){
+    public static ObservableList<Columns> Mysqlconnect(){
         Connection conn = ConnectDb();
         ObservableList<Columns> list = FXCollections.observableArrayList();
         try {
