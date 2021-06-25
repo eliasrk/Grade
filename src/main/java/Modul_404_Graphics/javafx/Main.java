@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 public class Main extends Application {
 
     public static void main(String[] args){
+
         createTable();
         getConnection();
         launch(args);

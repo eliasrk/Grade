@@ -12,13 +12,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javax.swing.*;
-import javax.swing.table.TableColumn;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import static Modul_404_Graphics.javafx.Mysqlconnect.ConnectDb;
 
 public class sceneController {
+
     public Stage stage;
     public Scene scene;
     @FXML
@@ -31,18 +31,8 @@ public class sceneController {
     private TextField grade;
     @FXML
     private TableView<Columns> dataBase;
-    @FXML
-    private TableColumn firstNames;
-    @FXML
-    private TableColumn lastNames;
-    @FXML
-    private TableColumn classes;
-    @FXML
-    private TableColumn grades;
-    ObservableList<Columns> listM;
 
     public void switchToScene1(ActionEvent event) throws IOException{
-
         Parent root = FXMLLoader.load(getClass().getResource("/view/Modul404.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -53,7 +43,7 @@ public class sceneController {
 
     public void delete(){
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Modul404", "root", "CsBe.12345");
+            Connection conn =ConnectDb();
             String query = " DELETE FROM notes\n" +
                     "ORDER BY id DESC\n" +
                     "LIMIT 1 ";
@@ -67,26 +57,21 @@ public class sceneController {
     }
 
 
-    public static ObservableList<Modul404> getDatabase() {
-
+    public void listed() {
+        Connection conn = ConnectDb();
+        ObservableList<Columns> list = FXCollections.observableArrayList();
         try {
+            PreparedStatement ps = conn.prepareStatement("select first, last,class,grade from users");
+            ResultSet rs = ps.executeQuery();
 
-            Connection conn;
-            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Modul404", "root", "CsBe.12345");
-            Statement stmt = conn.createStatement();
-            String query = "SELECT * FROM notes";
-            ResultSet rs = stmt.executeQuery(query);
-            ObservableList<Modul404> list = FXCollections.observableArrayList();
-            while (rs.next()) {
-                list.addAll(new Modul404());
-
-
+            while (rs.next()){
+                list.addAll(new Columns((rs.getString("first")), (rs.getString("last")), (rs.getString("classes")), (rs.getString("grade"))));
+                System.out.println("this is running");
             }
-
-        } catch (Exception er) {
-            er.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("fix me");
         }
-        return getDatabase();
+        dataBase.setItems(list);
     }
 
     public void submit() {
@@ -99,7 +84,7 @@ public class sceneController {
         }
         try {
 
-            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Modul404", "root", "CsBe.12345");
+            Connection conn = ConnectDb();
             String query = " insert into notes (first, last, class, grade)"
                     + " values (?, ?, ?, ?)";
             PreparedStatement preparedStmt = conn.prepareStatement(query);
@@ -114,7 +99,10 @@ public class sceneController {
             System.err.println(e.getMessage());
         }
     }
+
+
 }
+
 
 
 
