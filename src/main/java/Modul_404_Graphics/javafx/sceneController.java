@@ -8,14 +8,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javax.swing.*;
 import java.io.IOException;
 import java.sql.*;
 
-import static Modul_404_Graphics.javafx.Mysqlconnect.ConnectDb;
+import static Modul_404_Graphics.javafx.dBConnection.ConnectDb;
 
 public class sceneController {
 
@@ -31,8 +37,18 @@ public class sceneController {
     private TextField grade;
     @FXML
     private TableView<Columns> dataBase;
-
+    @FXML
+    private BarChart barGraph;
+    @FXML
+    private TableColumn<String , String> firstNames2;
+    @FXML
+    private TableColumn<String , String> lastNames2;
+    @FXML
+    private TableColumn<String , String> classes2;
+    @FXML
+    private TableColumn<Integer,Integer> grades2;
     public void switchToScene1(ActionEvent event) throws IOException{
+
         Parent root = FXMLLoader.load(getClass().getResource("/view/Modul404.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -47,6 +63,7 @@ public class sceneController {
             String query = " DELETE FROM notes\n" +
                     "ORDER BY id DESC\n" +
                     "LIMIT 1 ";
+            assert conn != null;
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.execute();
         } catch (Exception e) {
@@ -55,22 +72,75 @@ public class sceneController {
         }
 
     }
+    public void Graph(ActionEvent event){
+
+        try {
 
 
-    public void listed() {
+            final CategoryAxis xAxis = new CategoryAxis();
+            final NumberAxis yAxis = new NumberAxis();
+            XYChart.Series<String,Float> set1 = new XYChart.Series<>();
+            yAxis.setLowerBound(0.0);
+            yAxis.setUpperBound(6.0);
+
+            barGraph.getData().add(set1);
+            barGraph.setTitle("Country Summary");
+            xAxis.setLabel("Country");
+            yAxis.setLabel("Value");
+            Connection conn = ConnectDb();
+            assert conn != null;
+            PreparedStatement ps = conn.prepareStatement("select * from notes");
+            ResultSet rs = ps.executeQuery();
+            int i = 1;
+            try {
+
+                while (rs.next()){
+
+                    set1.getData().add(new XYChart.Data((rs.getString("first")),(rs.getString("grade"))));
+                    System.out.println("this is running " + i);
+                    i++;
+                }
+            } catch (Exception e) {
+                System.out.println("fix me");
+            }
+
+        }
+        catch (Exception e) {
+            System.out.println("fix me");
+        }
+        return;
+    }
+
+    public void listed() throws SQLException {
+
         Connection conn = ConnectDb();
         ObservableList<Columns> list = FXCollections.observableArrayList();
+        assert conn != null;
+        PreparedStatement ps = conn.prepareStatement("select * from notes");
+        ResultSet rs = ps.executeQuery();
+        int i = 1;
+
         try {
-            PreparedStatement ps = conn.prepareStatement("select first, last,class,grade from users");
-            ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
-                list.addAll(new Columns((rs.getString("first")), (rs.getString("last")), (rs.getString("classes")), (rs.getString("grade"))));
-                System.out.println("this is running");
+                list.addAll(new Columns((rs.getString("first")), (rs.getString("last")),
+                        (rs.getString("class")), (rs.getInt("grade"))));
+                System.out.println("this is running " + i);
+                i++;
             }
         } catch (Exception e) {
             System.out.println("fix me");
         }
+        list.add(new Columns("ednhzrd","st","sfd",1));
+        /*
+        firstNames2.setCellValueFactory(new PropertyValueFactory<>("first"));
+        lastNames2.setCellValueFactory(new PropertyValueFactory<>("Last Name"));
+        grades2.setCellValueFactory(new PropertyValueFactory<>("Grade"));
+        classes2.setCellValueFactory(new PropertyValueFactory<>("Class"));
+        */
+
+        conn.close();
+
         dataBase.setItems(list);
     }
 
@@ -79,6 +149,7 @@ public class sceneController {
         String last1 = lastName.getText();
         String klasse1 = klasse.getText();
         String grade1 = grade.getText();
+
         if ((!(first1.length() > 0)) || (!(last1.length() > 0)) || (!(klasse1.length() > 0)) || (!(grade1.length() > 0))) {
             JOptionPane.showMessageDialog(null, "A Field is empty");
         }
