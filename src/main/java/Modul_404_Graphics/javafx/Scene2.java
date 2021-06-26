@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import static Modul_404_Graphics.javafx.dBConnection.ConnectDb;
 
@@ -49,7 +50,7 @@ public class Scene2 {
 
     public void switchToScene1(ActionEvent event) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("/view/Modul404.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Modul404.fxml")));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -72,14 +73,12 @@ public class Scene2 {
 
     }
 
-    public void Graph(ActionEvent event) {
+    public void Graph() {
         try {
             final CategoryAxis xAxis = new CategoryAxis();
             final NumberAxis yAxis = new NumberAxis();
             XYChart.Series<String, Float> set1 = new XYChart.Series<>();
-            yAxis.setLowerBound(0.0);
-            yAxis.setUpperBound(6.0);
-
+            xAxis.setMaxWidth(40);
             barGraph.getData().add(set1);
             barGraph.setTitle("Country Summary");
             xAxis.setLabel("Country");
@@ -88,13 +87,11 @@ public class Scene2 {
             assert conn != null;
             PreparedStatement ps = conn.prepareStatement("select * from notes");
             ResultSet rs = ps.executeQuery();
-            int i = 1;
             try {
                 while (rs.next()) {
 
-                    set1.getData().add(new XYChart.Data((rs.getString("first")), (rs.getString("grade"))));
-                    System.out.println("this is running " + i);
-                    i++;
+                    set1.getData().add(new XYChart.Data((rs.getString("first")), (rs.getFloat("grade"))));
+
                 }
             } catch (Exception e) {
                 System.out.println("fix me");
@@ -102,7 +99,6 @@ public class Scene2 {
         } catch (Exception e) {
             System.out.println("fix me");
         }
-        return;
     }
 
     public void listed() throws SQLException {
@@ -146,6 +142,7 @@ public class Scene2 {
             Connection conn = ConnectDb();
             String query = " insert into notes (first, last, class, grade)"
                     + " values (?, ?, ?, ?)";
+            assert conn != null;
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, first1);
             preparedStmt.setString(2, last1);

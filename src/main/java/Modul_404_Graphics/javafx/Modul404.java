@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Modul404 {
 
@@ -30,7 +31,7 @@ public class Modul404 {
         String pass = password.getText();
 
         if ((user.equals("user")) || (pass.equals("pass"))) {
-            Parent root = FXMLLoader.load(getClass().getResource("/view/Scene2.fxml"));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Scene2.fxml")));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);

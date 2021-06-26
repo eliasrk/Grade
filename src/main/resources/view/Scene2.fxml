@@ -31,7 +31,7 @@
           <CategoryAxis side="BOTTOM" />
         </xAxis>
         <yAxis>
-          <NumberAxis side="LEFT" />
+          <NumberAxis side="LEFT" upperBound="5.5" />
         </yAxis>
       </BarChart>
       <AnchorPane layoutY="381.0" prefHeight="342.0" prefWidth="600.0" />
