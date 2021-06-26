@@ -117,7 +117,6 @@ public class Scene2 {
         } catch (Exception e) {
             System.out.println("fix me");
         }
-
         first.setCellValueFactory(new PropertyValueFactory<>(first.getId().toLowerCase()));
         last.setCellValueFactory(new PropertyValueFactory<>(last.getId().toLowerCase()));
         graded.setCellValueFactory(new PropertyValueFactory<>(graded.getId().toLowerCase()));
@@ -127,6 +126,7 @@ public class Scene2 {
 
 
     }
+
 
     public void submit() {
         String first1 = firstName.getText();

@@ -1,5 +1,4 @@
 package Modul_404_Graphics.javafx;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,9 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Objects;
 
-import static Modul_404_Graphics.javafx.dBConnection.ConnectDb;
-
-
+import static Modul_404_Graphics.javafx.dBConnection.*;
 public class Main extends Application {
 
     public static void main(String[] args){
