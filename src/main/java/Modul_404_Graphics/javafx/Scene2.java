@@ -19,11 +19,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javax.swing.*;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static Modul_404_Graphics.javafx.dBConnection.ConnectDb;
 
-public class sceneController {
+public class Scene2 {
 
     public Stage stage;
     public Scene scene;
@@ -40,14 +43,11 @@ public class sceneController {
     @FXML
     private BarChart barGraph;
     @FXML
-    private TableColumn<String , String> firstNames2;
+    private TableColumn<String, String> first, last, classes;
     @FXML
-    private TableColumn<String , String> lastNames2;
-    @FXML
-    private TableColumn<String , String> classes2;
-    @FXML
-    private TableColumn<Integer,Integer> grades2;
-    public void switchToScene1(ActionEvent event) throws IOException{
+    private TableColumn<Float, Float> graded;
+
+    public void switchToScene1(ActionEvent event) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/Modul404.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -56,10 +56,9 @@ public class sceneController {
         stage.show();
     }
 
-
-    public void delete(){
+    public void delete() {
         try {
-            Connection conn =ConnectDb();
+            Connection conn = ConnectDb();
             String query = " DELETE FROM notes\n" +
                     "ORDER BY id DESC\n" +
                     "LIMIT 1 ";
@@ -72,14 +71,12 @@ public class sceneController {
         }
 
     }
-    public void Graph(ActionEvent event){
 
+    public void Graph(ActionEvent event) {
         try {
-
-
             final CategoryAxis xAxis = new CategoryAxis();
             final NumberAxis yAxis = new NumberAxis();
-            XYChart.Series<String,Float> set1 = new XYChart.Series<>();
+            XYChart.Series<String, Float> set1 = new XYChart.Series<>();
             yAxis.setLowerBound(0.0);
             yAxis.setUpperBound(6.0);
 
@@ -93,19 +90,16 @@ public class sceneController {
             ResultSet rs = ps.executeQuery();
             int i = 1;
             try {
+                while (rs.next()) {
 
-                while (rs.next()){
-
-                    set1.getData().add(new XYChart.Data((rs.getString("first")),(rs.getString("grade"))));
+                    set1.getData().add(new XYChart.Data((rs.getString("first")), (rs.getString("grade"))));
                     System.out.println("this is running " + i);
                     i++;
                 }
             } catch (Exception e) {
                 System.out.println("fix me");
             }
-
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("fix me");
         }
         return;
@@ -118,30 +112,24 @@ public class sceneController {
         assert conn != null;
         PreparedStatement ps = conn.prepareStatement("select * from notes");
         ResultSet rs = ps.executeQuery();
-        int i = 1;
-
         try {
 
-            while (rs.next()){
-                list.addAll(new Columns((rs.getString("first")), (rs.getString("last")),
-                        (rs.getString("class")), (rs.getInt("grade"))));
-                System.out.println("this is running " + i);
-                i++;
+            while (rs.next()) {
+                list.add(new Columns((rs.getString("first")), (rs.getString("last")),
+                        (rs.getString("class")), (rs.getFloat("grade"))));
             }
         } catch (Exception e) {
             System.out.println("fix me");
         }
-        list.add(new Columns("ednhzrd","st","sfd",1));
-        /*
-        firstNames2.setCellValueFactory(new PropertyValueFactory<>("first"));
-        lastNames2.setCellValueFactory(new PropertyValueFactory<>("Last Name"));
-        grades2.setCellValueFactory(new PropertyValueFactory<>("Grade"));
-        classes2.setCellValueFactory(new PropertyValueFactory<>("Class"));
-        */
 
+        first.setCellValueFactory(new PropertyValueFactory<>(first.getId().toLowerCase()));
+        last.setCellValueFactory(new PropertyValueFactory<>(last.getId().toLowerCase()));
+        graded.setCellValueFactory(new PropertyValueFactory<>(graded.getId().toLowerCase()));
+        classes.setCellValueFactory(new PropertyValueFactory<>(classes.getId().toLowerCase()));
+        dataBase.setItems(list);
         conn.close();
 
-        dataBase.setItems(list);
+
     }
 
     public void submit() {

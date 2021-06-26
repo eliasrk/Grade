@@ -15,7 +15,6 @@ import static Modul_404_Graphics.javafx.dBConnection.ConnectDb;
 public class Main extends Application {
 
     public static void main(String[] args){
-
         createTable();
         launch(args);
     }

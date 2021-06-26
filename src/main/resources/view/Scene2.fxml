@@ -9,15 +9,15 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Modul_404_Graphics.javafx.sceneController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Modul_404_Graphics.javafx.Scene2">
    <children>
       <Button layoutX="532.0" layoutY="14.0" mnemonicParsing="false" onAction="#switchToScene1" text="Logout" />
       <TableView fx:id="dataBase" layoutX="186.0" layoutY="66.0" prefHeight="315.0" prefWidth="399.0">
         <columns>
-          <TableColumn fx:id="firstNames2" prefWidth="100.0" text="First Name" />
-          <TableColumn fx:id="lastNames2" prefWidth="100.0" text="Last Name" />
-            <TableColumn fx:id="classes2" prefWidth="100.0" text="Class" />
-            <TableColumn fx:id="grades2" prefWidth="100.0" text="Grade" />
+          <TableColumn fx:id="first" prefWidth="100.0" text="First Name" />
+          <TableColumn fx:id="last" prefWidth="100.0" text="Last Name" />
+            <TableColumn fx:id="classes" prefWidth="100.0" text="Class" />
+            <TableColumn fx:id="graded" prefWidth="100.0" text="Grade" />
         </columns>
       </TableView>
       <Button fx:id="btnAdd" layoutX="14.0" layoutY="211.0" mnemonicParsing="false" onAction="#submit" prefHeight="25.0" prefWidth="149.0" text="Add" />
